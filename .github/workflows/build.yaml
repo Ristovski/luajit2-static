@@ -17,7 +17,7 @@ jobs:
         version: 0.8.0
     - name: "Patch Makefile"
       run: |
-        sed -i 's/= gcc/= zig cc -target x86_64-linux-musl -static/' luajit2/src/Makefile
+        sed -i 's/= gcc/= zig cc -target x86_64-linux-musl -static -lc -lunwind/' luajit2/src/Makefile
         sed -i '/CCOPT= -O2/s/$/ -fPIC -march=x86_64_v3/' luajit2/src/Makefile
         sed -i '/^#.*BUILDMODE= static/s/^#//' luajit2/src/Makefile
     - name: "Extract luajit2 version"
@@ -29,7 +29,7 @@ jobs:
     - name: "Build luajit2"
       run: |
         cd luajit2
-        make amalg XCFLAGS="-DLUAJIT_ENABLE_LUA52COMPAT -DLUAJIT_NUMMODE=2 -DLUAJIT_NO_UNWIND"
+        make amalg XCFLAGS="-DLUAJIT_ENABLE_LUA52COMPAT -DLUAJIT_NUMMODE=2"
         mkdir ../luajit2-static-${{ env.LUAJIT2VER }}
         make install DESTDIR=$PWD/../luajit2-static-${{ env.LUAJIT2VER }} PREFIX=
     - name: "Compress installation"
